@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-import time
 import base64
-import io
-from PIL import Image
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# 一个1x1像素的透明PNG图片（base64编码）
+TINY_IMAGE = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
 
 @app.route('/api/health', methods=['GET'])
 def health():
@@ -23,24 +23,24 @@ def process():
         if file.filename == '':
             return jsonify({'error': '没有选择文件'}), 400
         
-        # 读取图片
-        image = Image.open(file.stream)
+        # 读取文件（只是验证文件存在，不处理）
+        file_data = file.read()
         
-        # 创建结果（这里简单返回原图，实际应该有AI处理）
-        result_buffer = io.BytesIO()
-        image.save(result_buffer, format='PNG')
-        result_base64 = base64.b64encode(result_buffer.getvalue()).decode()
+        if len(file_data) == 0:
+            return jsonify({'error': '文件为空'}), 400
         
         # 模拟角色识别
-        characters = ['皮卡丘', '鸣人', '蜘蛛侠', '蝙蝠侠', '超人']
+        characters = ['皮卡丘', '鸣人', '蜘蛛侠', '蝙蝠侠', '超人', '钢铁侠', '美国队长']
         import random
         character = random.choice(characters)
         
+        # 返回一个简单的演示图片
+        # 在实际应用中，这里会进行AI处理
         return jsonify({
             'success': True,
             'character': character,
-            'resultImage': f'data:image/png;base64,{result_base64}',
-            'message': '处理完成'
+            'resultImage': f'data:image/png;base64,{TINY_IMAGE}',
+            'message': f'已识别角色：{character}（演示模式）'
         })
         
     except Exception as e:
