@@ -21,8 +21,11 @@ export default function Home() {
       const formData = new FormData()
       formData.append('image', imageFile)
       
-      // 使用环境变量，如果没有则使用生产环境的默认URL
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://ai-cosplay-fusion-backend.onrender.com'
+      // 使用环境变量，如果没有则根据运行环境自动选择
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 
+                     (typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+                      ? 'http://localhost:5000' 
+                      : 'https://ai-cosplay-fusion-backend.onrender.com')
       console.log('API URL:', apiUrl)
       const response = await fetch(`${apiUrl}/api/process-image`, {
         method: 'POST',
