@@ -88,7 +88,7 @@ export default function ResultDisplay({
       <div className="mb-6">
         <div className="relative bg-gray-100 rounded-xl overflow-hidden">
           <img
-            src={activeTab === 'result' ? resultImage : originalImage}
+            src={activeTab === 'result' ? resultImage : (originalImage || '')}
             alt={activeTab === 'result' ? '融合结果' : '原始图片'}
             className="w-full h-auto max-h-96 object-contain mx-auto"
           />
